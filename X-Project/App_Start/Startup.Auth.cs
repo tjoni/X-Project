@@ -7,6 +7,9 @@ using Microsoft.Owin.Security.Google;
 using Owin;
 using X_Project.Models;
 using System.Configuration;
+using Microsoft.Owin.Security.Facebook;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace X_Project
 {
@@ -55,9 +58,30 @@ namespace X_Project
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            app.UseFacebookAuthentication(
-               appId: ConfigurationManager.AppSettings["Facebook_AppId"],
-               appSecret: ConfigurationManager.AppSettings["Facebook_AppSecret"]);
+            //app.UseFacebookAuthentication(
+            //   appId: ConfigurationManager.AppSettings["Facebook_AppId"],
+            //   appSecret: ConfigurationManager.AppSettings["Facebook_AppSecret"]);
+
+            //instance for FacebookAuthenticationOptions
+            var facebookOptions = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions
+            {
+                AppId = ConfigurationManager.AppSettings["Facebook_AppId"],
+                AppSecret = ConfigurationManager.AppSettings["Facebook_AppSecret"],
+                Provider = new FacebookAuthenticationProvider()
+                {
+                    OnAuthenticated = (context) => // context comes back from facebook during oath process
+                    {
+                        context.Identity.AddClaim(new Claim("FacebookAccessToken", context.AccessToken));
+                        return Task.FromResult(0);
+                    }
+
+                },
+                SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                SendAppSecretProof = true
+            };
+            facebookOptions.Scope.Add("email user_friends user_about_me user_birthday user_location");
+
+            app.UseFacebookAuthentication(facebookOptions);
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
