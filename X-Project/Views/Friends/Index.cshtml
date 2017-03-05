@@ -1,0 +1,18 @@
+﻿@model IEnumerable<X_Project.Models.FacebookFriendsModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-6">
+                <input type="hidden" value="@item.Id" />
+                <img src="@item.ImageUrl" />
+                <h2>@item.Name</h2>
+                <link href="" />
+            </div>
+        }
+    </div>
+</div>
