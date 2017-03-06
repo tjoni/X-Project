@@ -1,4 +1,5 @@
 ﻿using Facebook;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using X_Project.Attribute;
 using X_Project.Extension;
+using X_Project.ModelData;
 using X_Project.Models;
 
 namespace X_Project.Controllers
@@ -38,17 +40,22 @@ namespace X_Project.Controllers
                             fb.GetTaskAsync(
                                 "{0}/picture?width=200&height=250&redirect=false".GraphAPICall((string)myInfo.id,
                                     appsecret_proof));
-                    var eee = profileImgResult.data.url;
+                    var picture = profileImgResult.data.url;
 
                     var facebookProfile = new FacebookProfileModel()
                     {
                         FirstName = myInfo.first_name,
                         LastName = myInfo.last_name,
-                        ImageURL = eee,
+                        ImageURL = picture,
                         LinkURL = myInfo.link,
                         Fullname = myInfo.name,
                     };
-                    return View(facebookProfile);
+                    ViewModel _viewModel = new ViewModel();
+                    WishListContext context = new WishListContext();
+                    string userId = User.Identity.GetUserId();
+                    _viewModel._FacebookProfileModel = facebookProfile;
+                    _viewModel._WishListItem = context.WishListItems.Where(x => x.UserId == userId).ToList();
+                    return View(_viewModel);
 
                 }
                 catch (Exception)
@@ -58,6 +65,25 @@ namespace X_Project.Controllers
                 }
             }
             return View();
+        }
+        public ActionResult AddWishList(string url)
+        {
+            var getTitle = Request["Title"];
+            var getImage = Request["ImageUrl"];
+            string GetuserId = User.Identity.GetUserId();
+
+            var context = new WishListContext();
+
+            context.WishListItems.Add(new WishListItem
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = GetuserId,
+                Title = getTitle,
+                Image = getImage,
+                Time = DateTime.Now
+            });
+            context.SaveChanges();
+            return RedirectToAction("Index", "Profile");
         }
     }
 }

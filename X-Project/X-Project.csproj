@@ -209,6 +209,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ModelData\ViewModel.cs" />
+    <Compile Include="ModelData\WishListContext.cs" />
+    <Compile Include="ModelData\WishListItem.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\FacebookFriendsModel.cs" />
     <Compile Include="Models\FacebookProfileModel.cs" />

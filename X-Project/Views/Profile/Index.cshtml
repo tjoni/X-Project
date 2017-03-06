@@ -1,8 +1,31 @@
-﻿@model X_Project.Models.FacebookProfileModel
-@{
-    ViewBag.Title = "Index";
-}
-<img src="@Model.ImageURL" />
-<div>@Model.Fullname</div>
-<a href="@Model.LinkURL">Wöööt</a>
+﻿@model X_Project.ModelData.ViewModel
 
+@{
+
+}
+<div class="container">
+    <div class="row">
+        <img src="@Model._FacebookProfileModel.ImageURL" />
+        <div>@Model._FacebookProfileModel.Fullname</div>
+        <a href="@Model._FacebookProfileModel.LinkURL">Wöööt</a>
+
+        @using (Html.BeginForm("AddWishList", "Profile"))
+        {
+            <p>Add Wishlist</p>
+            <input type="text" name="Title" placeholder="Title" />
+            <input type="text" name="ImageUrl" placeholder="Image url" />
+            <br />
+            <input type="submit" value="submit" />
+        }
+    </div>
+    <div class="row">
+        @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
+        {
+            <div class="col-lg-6">
+                <input type="hidden" value="@item.UserId" />
+                <img src="@item.Image" style="height: 250px; width: 250px;" />
+                <h2>@item.Title</h2>
+            </div>
+        }
+    </div>
+</div>

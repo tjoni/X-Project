@@ -79,7 +79,7 @@ namespace X_Project
                 SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 SendAppSecretProof = true
             };
-            facebookOptions.Scope.Add("email user_friends user_about_me user_birthday user_location");
+            facebookOptions.Scope.Add("email user_friends user_about_me");
 
             app.UseFacebookAuthentication(facebookOptions);
 
