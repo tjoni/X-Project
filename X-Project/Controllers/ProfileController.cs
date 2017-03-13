@@ -1,4 +1,5 @@
 ﻿using Facebook;
+using HtmlAgilityPack;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace X_Project.Controllers
                             fb.GetTaskAsync(
                                 "me?fields=first_name,last_name,email,name,link"
                                     .GraphAPICall(appsecret_proof));
+                    
 
                     //get current picture
                     dynamic profileImgResult =
@@ -41,7 +43,7 @@ namespace X_Project.Controllers
                                 "{0}/picture?width=200&height=250&redirect=false".GraphAPICall((string)myInfo.id,
                                     appsecret_proof));
                     var picture = profileImgResult.data.url;
-
+                    
                     var facebookProfile = new FacebookProfileModel()
                     {
                         FirstName = myInfo.first_name,
@@ -68,9 +70,13 @@ namespace X_Project.Controllers
         }
         public ActionResult AddWishList(string url)
         {
-            var getTitle = Request["Title"];
-            var getImage = Request["ImageUrl"];
+            //var getTitle = Request["Title"];
+            //var getImage = Request["ImageUrl"];
+
+            var getUrl = Request["urlString"];
             string GetuserId = User.Identity.GetUserId();
+            
+            var metaInformation = GetMetaDataFromUrl(getUrl);
 
             var context = new WishListContext();
 
@@ -78,12 +84,95 @@ namespace X_Project.Controllers
             {
                 Id = Guid.NewGuid().ToString(),
                 UserId = GetuserId,
-                Title = getTitle,
-                Image = getImage,
+                Title = HttpUtility.HtmlDecode(metaInformation.Title),
+                Image = metaInformation.ImageUrl,
+                WishUrl = getUrl,
                 Time = DateTime.Now
             });
             context.SaveChanges();
             return RedirectToAction("Index", "Profile");
         }
+        public static MetaInformation GetMetaDataFromUrl(string url)
+        {
+            // Get the URL specified
+            var webGet = new HtmlWeb();
+            var document = webGet.Load(url);
+            var metaTags = document.DocumentNode.SelectNodes("//meta");
+            MetaInformation metaInfo = new MetaInformation(url);
+            if (metaTags != null)
+            {
+                int matchCount = 0;
+                foreach (var tag in metaTags)
+                {
+                    var tagName = tag.Attributes["name"];
+                    var tagContent = tag.Attributes["content"];
+                    var tagProperty = tag.Attributes["property"];
+                    if (tagName != null && tagContent != null)
+                    {
+                        switch (tagName.Value.ToLower())
+                        {
+                            case "title":
+                                metaInfo.Title = tagContent.Value;
+                                matchCount++;
+                                break;
+                            case "description":
+                                metaInfo.Description = tagContent.Value;
+                                matchCount++;
+                                break;
+                            case "keywords":
+                                metaInfo.Keywords = tagContent.Value;
+                                matchCount++;
+                                break;
+                        }
+                    }
+                    else if (tagProperty != null && tagContent != null)
+                    {
+                        switch (tagProperty.Value.ToLower())
+                        {
+                            case "og:title":
+                                metaInfo.Title = string.IsNullOrEmpty(metaInfo.Title) ? tagContent.Value : metaInfo.Title;
+                                matchCount++;
+                                break;
+                            case "og:description":
+                                metaInfo.Description = string.IsNullOrEmpty(metaInfo.Description) ? tagContent.Value : metaInfo.Description;
+                                matchCount++;
+                                break;
+                            case "og:image":
+                                metaInfo.ImageUrl = string.IsNullOrEmpty(metaInfo.ImageUrl) ? tagContent.Value : metaInfo.ImageUrl;
+                                matchCount++;
+                                break;
+                        }
+                    }
+                }
+                metaInfo.HasData = matchCount > 0;
+            }
+            return metaInfo;
+        }
     }
+    public class MetaInformation
+    {
+        public bool HasData { get; set; }
+        public string Url { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Keywords { get; set; }
+        public string ImageUrl { get; set; }
+
+        public MetaInformation(string url)
+        {
+            Url = url;
+            HasData = false;
+        }
+
+        //public MetaInformation(string url, string title, string description, string keywords, string imageUrl, string siteName)
+        //{
+        //    Url = url;
+        //    Title = HttpUtility.HtmlDecode(title);
+        //    Description = description;
+        //    Keywords = keywords;
+        //    ImageUrl = imageUrl;
+        //    SiteName = siteName;
+        //}
+    }
+
 }

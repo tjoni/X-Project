@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using X_Project.Models;
+using Facebook;
+using X_Project.Extension;
 
 namespace X_Project.Controllers
 {
@@ -330,6 +332,7 @@ namespace X_Project.Controllers
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            
             switch (result)
             {
                 case SignInStatus.Success:
@@ -339,6 +342,7 @@ namespace X_Project.Controllers
                     {
                         await StoreFacebookAuthToken(user);
                         await SignInAsync(user, isPersistent: false);
+                        await UserManager.UpdateAsync(user);
                     }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -348,9 +352,7 @@ namespace X_Project.Controllers
                 case SignInStatus.Failure:
                 default:
                     // If the user does not have an account, then prompt the user to create an account
-                    ViewBag.ReturnUrl = returnUrl;
-                    ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    return await RegisterFacebookUser();
             }
         }
 
@@ -391,6 +393,33 @@ namespace X_Project.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
+
+        private async Task<ActionResult> RegisterFacebookUser()
+        {
+            var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+
+            // Tillfälligt
+            var temporaryEmail = $"{Guid.NewGuid()}@wishlistantonio.se";
+
+            if (info == null)
+            {
+                return View("ExternalLoginFailure");
+            }
+            var user = new ApplicationUser { UserName = temporaryEmail, Email = temporaryEmail };
+            var result = await UserManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToLocal("");
+                }
+            }
+
+            return View("ExternalLoginFailure");
+        }
+
         private async Task StoreFacebookAuthToken(ApplicationUser user)
         {
             var claimsIdentity = await AuthenticationManager.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
@@ -409,6 +438,18 @@ namespace X_Project.Controllers
                     await UserManager.RemoveClaimAsync(user.Id, currentClaims[0]);
                     await UserManager.AddClaimAsync(user.Id, facebookAccessToken);
                 }
+
+                var appsecret_proof = facebookAccessToken.Value.GenerateAppSecretProof();
+
+                var fb = new FacebookClient(facebookAccessToken.Value);
+                //Get current user profile
+                dynamic myInfo =
+                    await
+                        fb.GetTaskAsync(
+                            "me?fields=first_name,last_name,email,name,link"
+                                .GraphAPICall(appsecret_proof));
+
+                user.FacebookId = myInfo.id;
             }
         }
         //Sign out user if user was logged in, and sign them in back again.

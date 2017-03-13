@@ -13,5 +13,9 @@ namespace X_Project.Models
         [Required]
         public string Name { get; set; }
         public string ImageUrl { get; set; }
+
+        public string UserId { get; set; }
+
+        public int WishListCount { get; set; }
     }
 }

@@ -12,8 +12,7 @@
         @using (Html.BeginForm("AddWishList", "Profile"))
         {
             <p>Add Wishlist</p>
-            <input type="text" name="Title" placeholder="Title" />
-            <input type="text" name="ImageUrl" placeholder="Image url" />
+            <input type="text" name="urlString" placeholder="Url" />
             <br />
             <input type="submit" value="submit" />
         }
@@ -25,6 +24,7 @@
                 <input type="hidden" value="@item.UserId" />
                 <img src="@item.Image" style="height: 250px; width: 250px;" />
                 <h2>@item.Title</h2>
+                <a href=@item.WishUrl>Link</a>
             </div>
         }
     </div>

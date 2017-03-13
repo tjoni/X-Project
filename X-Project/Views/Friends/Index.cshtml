@@ -12,6 +12,8 @@
                 <img src="@item.ImageUrl" />
                 <h2>@item.Name</h2>
                 <link href="" />
+                <h2>@item.WishListCount</h2>
+                @Html.ActionLink("Go", "UserProfile", new { userId = item.UserId })
             </div>
         }
     </div>

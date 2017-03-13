@@ -7,14 +7,28 @@ using System.Web;
 using System.Web.Mvc;
 using X_Project.Attribute;
 using X_Project.Extension;
+using X_Project.ModelData;
 using X_Project.Models;
+using X_Project.Services;
 
 namespace X_Project.Controllers
 {
+    [RoutePrefix("friends")]
     [Authorize]
     [FacebookAccessToken]
     public class FriendsController : Controller
     {
+        private WishListContext _context;
+        private IFacebookService _facebookService;
+
+        public FriendsController(
+            IFacebookService facebookService,
+            WishListContext context)
+        {
+            _context = context;
+            _facebookService = facebookService;
+        }
+
         // GET: Friends
         public async Task<ActionResult> Index()
         {
@@ -24,26 +38,9 @@ namespace X_Project.Controllers
                 try
                 {
                     var appsecret_proof = access_token.GenerateAppSecretProof();
+                    
+                    var friendsList = await _facebookService.GetFriends(access_token, appsecret_proof);
 
-                    var fb = new FacebookClient(access_token);
-                    //Get current user profile
-                    dynamic friends =
-                        await
-                            fb.GetTaskAsync(
-                                "me/friends?fields=name,id,picture.width(300).height(250)"
-                                    .GraphAPICall(appsecret_proof));
-
-                    var friendsList = new List<FacebookFriendsModel>();
-                    foreach (dynamic friend in friends.data)
-                    {
-                        friendsList.Add(new FacebookFriendsModel
-                        {
-                            Id = friend.id,
-                            Name = friend.name,
-                            ImageUrl = friend.picture.data.url
-                        });
-                    }
-                    ViewBag.friends = friendsList;
                     return View(friendsList);
                 }
                 catch (Exception)
@@ -58,6 +55,14 @@ namespace X_Project.Controllers
                 throw new HttpException(404, "Missing Access Token");
             }
 
+        }
+        
+        public async Task<ActionResult> UserProfile(string userId)
+        {
+            var wishContext = new WishListContext();
+            var wishlists = wishContext.WishListItems.Where(x => x.UserId == userId).ToList();
+
+            return View(wishlists);
         }
     }
 }
