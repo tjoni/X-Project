@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using X_Project.ModelData;
+using X_Project.Repository;
 using X_Project.Services;
 
 namespace X_Project
@@ -29,6 +30,8 @@ namespace X_Project
 
             builder.RegisterType<FacebookService>()
                 .As<IFacebookService>();
+            builder.RegisterType<WishRepository>()
+                .As<IWishRepository>();
 
             builder.RegisterType<WishListContext>().InstancePerRequest();
 

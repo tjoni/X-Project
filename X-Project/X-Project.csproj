@@ -239,6 +239,8 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\WishRepository.cs" />
+    <Compile Include="Repository\IWishRepository.cs" />
     <Compile Include="Services\FacebookService.cs" />
     <Compile Include="Services\IFacebookService.cs" />
     <Compile Include="Startup.cs" />

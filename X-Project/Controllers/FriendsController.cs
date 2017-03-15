@@ -9,6 +9,7 @@ using X_Project.Attribute;
 using X_Project.Extension;
 using X_Project.ModelData;
 using X_Project.Models;
+using X_Project.Repository;
 using X_Project.Services;
 
 namespace X_Project.Controllers
@@ -18,14 +19,14 @@ namespace X_Project.Controllers
     [FacebookAccessToken]
     public class FriendsController : Controller
     {
-        private WishListContext _context;
+        //private WishListContext _context;
         private IFacebookService _facebookService;
+        private IWishRepository _iRepository;
 
-        public FriendsController(
-            IFacebookService facebookService,
-            WishListContext context)
+        public FriendsController(IFacebookService facebookService,/* WishListContext context,*/ IWishRepository Irepository)
         {
-            _context = context;
+            _iRepository = Irepository;
+            //_context = context;
             _facebookService = facebookService;
         }
 
@@ -59,8 +60,7 @@ namespace X_Project.Controllers
         
         public async Task<ActionResult> UserProfile(string userId)
         {
-            var wishContext = new WishListContext();
-            var wishlists = wishContext.WishListItems.Where(x => x.UserId == userId).ToList();
+            var wishlists = await _iRepository.GetWishlistById(userId);
 
             return View(wishlists);
         }
