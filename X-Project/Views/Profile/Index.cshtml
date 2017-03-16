@@ -3,29 +3,79 @@
 @{
 
 }
-<div class="container">
-    <div class="row">
+
+<div class="profile-div">
+    @*<div class="row">
         <img src="@Model._FacebookProfileModel.ImageURL" />
         <div>@Model._FacebookProfileModel.Fullname</div>
         <a href="@Model._FacebookProfileModel.LinkURL">Wöööt</a>
 
-        @using (Html.BeginForm("AddWishList", "Profile"))
-        {
-            <p>Add Wishlist</p>
-            <input type="text" name="urlString" placeholder="Url" />
-            <br />
-            <input type="submit" value="submit" />
-        }
-    </div>
-    <div class="row">
-        @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
-        {
-            <div class="col-lg-6">
-                <input type="hidden" value="@item.UserId" />
-                <img src="@item.Image" style="height: 250px; width: 250px;" />
-                <h2>@item.Title</h2>
-                <a href=@item.WishUrl>Link</a>
-            </div>
-        }
+    </div>*@
+    <img src="@Model._FacebookProfileModel.ImageURL" class="profile-img">
+    <div class="profile-text">
+        <h1 class="profile-name">@Model._FacebookProfileModel.Fullname</h1>
+        <a href="@Model._FacebookProfileModel.LinkURL" class="profile-title">Profile</a>
+        <span class="profile-title">Items </span>
     </div>
 </div>
+    @*<div class="container">
+        <div class="row">
+            @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
+            {
+                <div class="col-lg-6">
+                    <input type="hidden" value="@item.UserId" />
+                    <img src="@item.Image" style="height: 250px; width: 250px;" />
+                    <h2>@item.Title</h2>
+                    <a href=@item.WishUrl>Link</a>
+                </div>
+            }
+        </div>
+    </div>*@
+@*<div class="container">
+    <div class="wish-items">
+        <h1 id="h1item">Wishlist</h1>
+        <div class="row">
+            @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
+            {
+
+                <div class="item col-lg-4 col-md-4 col-sm-4">
+                    <input type="hidden" value="@item.UserId" />
+                    <img src="@item.Image" alt="item" />
+                    <h2>@item.Title</h2>
+                    <a href=@item.WishUrl style=" text-decoration underline;">View item</a>
+                    <button class="add-to-cart" type="button">Delete</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>*@
+<div class="MyContainer">
+    @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
+            {
+        <div class="item-div">
+            <div class="item ">
+                <input type="hidden" value="@item.UserId" />
+                <img src="@item.Image" alt="item" />
+                <h2>@item.Title</h2>
+                <a href=@item.WishUrl style=" text-decoration underline;">View item</a>
+                <button class="add-to-cart" type="button">Delete</button>
+            </div>
+        </div>
+
+    }
+</div>
+@using (Html.BeginForm("AddWishList", "Profile"))
+{
+    <section id="fixed-form-container">
+        <div class="button">Add Wish</div>
+        <div class="body">
+            <div class="form-group">
+                <label for="url">Url address:</label>
+                <input type="url" class="form-control" required="required" name="urlString">
+            </div>
+            @*<button type="submit" class="btn btn-default">Submit</button>*@
+            <input type="submit" class="btn btn-default" value="submit" />
+        </div>
+    </section>
+}

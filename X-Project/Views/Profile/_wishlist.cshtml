@@ -1,0 +1,16 @@
+﻿@model IEnumerable<X_Project.ModelData.WishListItem>
+<div class="MyContainer">
+    @foreach (var item in Model.OrderByDescending(x => x.Time))
+            {
+        <div class="item-div">
+            <div class="item ">
+                <input type="hidden" value="@item.UserId" />
+                <img src="@item.Image" alt="item" />
+                <h2>@item.Title</h2>
+                <a href=@item.WishUrl style=" text-decoration underline;">View item</a>
+                <button class="add-to-cart" type="button">Delete</button>
+            </div>
+        </div>
+
+    }
+</div>
