@@ -1,16 +1,16 @@
-﻿@model IEnumerable<X_Project.ModelData.WishListItem>
+﻿@model X_Project.ModelData.ViewModel
 <div class="MyContainer">
-    @foreach (var item in Model.OrderByDescending(x => x.Time))
+    @foreach (var item in Model._WishListItem.OrderByDescending(x => x.Time))
             {
         <div class="item-div">
             <div class="item ">
-                <input type="hidden" value="@item.UserId" />
+                <input type="hidden" value="@item.Id" id="WishId"/>
                 <img src="@item.Image" alt="item" />
                 <h2>@item.Title</h2>
-                <a href=@item.WishUrl style=" text-decoration underline;">View item</a>
-                <button class="add-to-cart" type="button">Delete</button>
+                <a href=@item.WishUrl style="text-decoration: underline;">View item</a>
+                <button type="button" id="deleteWishbtn">Delete</button>
+                @*@Html.ActionLink("DeleteWish", "DeleteWish", new {id = @item.Id, @class = "btn btn-default" })*@
             </div>
         </div>
-
     }
 </div>

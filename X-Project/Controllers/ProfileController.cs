@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -73,10 +74,15 @@ namespace X_Project.Controllers
             //var getTitle = Request["Title"];
             //var getImage = Request["ImageUrl"];
 
-            var getUrl = Request["urlString"];
+            //var getUrl = Request["urlString"];
             string GetuserId = User.Identity.GetUserId();
             
-            var metaInformation = GetMetaDataFromUrl(getUrl);
+            var metaInformation = GetMetaDataFromUrl(url);
+
+            if(metaInformation == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad url");
+            }
 
             var context = new WishListContext();
 
@@ -86,68 +92,105 @@ namespace X_Project.Controllers
                 UserId = GetuserId,
                 Title = HttpUtility.HtmlDecode(metaInformation.Title),
                 Image = metaInformation.ImageUrl,
-                WishUrl = getUrl,
+                WishUrl = url,
                 Time = DateTime.Now
             });
             context.SaveChanges();
-            return RedirectToAction("Index", "Profile");
+
+            ViewModel _viewModel = new ViewModel();
+            string userId = User.Identity.GetUserId();
+            _viewModel._WishListItem = context.WishListItems.Where(x => x.UserId == userId).ToList();
+            return PartialView("_wishlist", _viewModel);
+
+        }
+        public ActionResult testajax()
+        {
+            ViewModel _viewModel = new ViewModel();
+            WishListContext context = new WishListContext();
+            string userId = User.Identity.GetUserId();
+
+            _viewModel._WishListItem = context.WishListItems.Where(x => x.UserId == userId).ToList();
+            return PartialView("_wishlist", _viewModel);
         }
         public static MetaInformation GetMetaDataFromUrl(string url)
         {
             // Get the URL specified
             var webGet = new HtmlWeb();
-            var document = webGet.Load(url);
-            var metaTags = document.DocumentNode.SelectNodes("//meta");
-            MetaInformation metaInfo = new MetaInformation(url);
-            if (metaTags != null)
+            try
             {
-                int matchCount = 0;
-                foreach (var tag in metaTags)
+                var document = webGet.Load(url);
+                var metaTags = document.DocumentNode.SelectNodes("//meta");
+                MetaInformation metaInfo = new MetaInformation(url);
+                if (metaTags != null)
                 {
-                    var tagName = tag.Attributes["name"];
-                    var tagContent = tag.Attributes["content"];
-                    var tagProperty = tag.Attributes["property"];
-                    if (tagName != null && tagContent != null)
+                    int matchCount = 0;
+                    foreach (var tag in metaTags)
                     {
-                        switch (tagName.Value.ToLower())
+                        var tagName = tag.Attributes["name"];
+                        var tagContent = tag.Attributes["content"];
+                        var tagProperty = tag.Attributes["property"];
+                        if (tagName != null && tagContent != null)
                         {
-                            case "title":
-                                metaInfo.Title = tagContent.Value;
-                                matchCount++;
-                                break;
-                            case "description":
-                                metaInfo.Description = tagContent.Value;
-                                matchCount++;
-                                break;
-                            case "keywords":
-                                metaInfo.Keywords = tagContent.Value;
-                                matchCount++;
-                                break;
+                            switch (tagName.Value.ToLower())
+                            {
+                                case "title":
+                                    metaInfo.Title = tagContent.Value;
+                                    matchCount++;
+                                    break;
+                                case "description":
+                                    metaInfo.Description = tagContent.Value;
+                                    matchCount++;
+                                    break;
+                                case "keywords":
+                                    metaInfo.Keywords = tagContent.Value;
+                                    matchCount++;
+                                    break;
+                            }
+                        }
+                        else if (tagProperty != null && tagContent != null)
+                        {
+                            switch (tagProperty.Value.ToLower())
+                            {
+                                case "og:title":
+                                    metaInfo.Title = string.IsNullOrEmpty(metaInfo.Title) ? tagContent.Value : metaInfo.Title;
+                                    matchCount++;
+                                    break;
+                                case "og:description":
+                                    metaInfo.Description = string.IsNullOrEmpty(metaInfo.Description) ? tagContent.Value : metaInfo.Description;
+                                    matchCount++;
+                                    break;
+                                case "og:image":
+                                    metaInfo.ImageUrl = string.IsNullOrEmpty(metaInfo.ImageUrl) ? tagContent.Value : metaInfo.ImageUrl;
+                                    matchCount++;
+                                    break;
+                            }
                         }
                     }
-                    else if (tagProperty != null && tagContent != null)
-                    {
-                        switch (tagProperty.Value.ToLower())
-                        {
-                            case "og:title":
-                                metaInfo.Title = string.IsNullOrEmpty(metaInfo.Title) ? tagContent.Value : metaInfo.Title;
-                                matchCount++;
-                                break;
-                            case "og:description":
-                                metaInfo.Description = string.IsNullOrEmpty(metaInfo.Description) ? tagContent.Value : metaInfo.Description;
-                                matchCount++;
-                                break;
-                            case "og:image":
-                                metaInfo.ImageUrl = string.IsNullOrEmpty(metaInfo.ImageUrl) ? tagContent.Value : metaInfo.ImageUrl;
-                                matchCount++;
-                                break;
-                        }
-                    }
+                    metaInfo.HasData = matchCount > 0;
                 }
-                metaInfo.HasData = matchCount > 0;
+                return metaInfo;
             }
-            return metaInfo;
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
+        public ActionResult DeleteWish(string id)
+        {
+            ViewModel _viewModel = new ViewModel();
+            WishListContext context = new WishListContext();
+            string userId = User.Identity.GetUserId();
+
+            var wishItem = context.WishListItems.Find(id);
+            context.WishListItems.Remove(wishItem);
+            context.SaveChanges();
+
+            _viewModel._WishListItem = context.WishListItems.Where(x => x.UserId == userId).ToList();
+
+            return PartialView("_wishlist", _viewModel);
+        }
+
     }
     public class MetaInformation
     {

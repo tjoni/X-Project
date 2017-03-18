@@ -3,61 +3,27 @@
 @{
     ViewBag.Title = "USerProfile";
 }
+<div class="MyContainer">
+    <div class="item-div">
+        <form action="">
+            <button style="display:inline;" type="button" class="btn btn-default" aria-label="Left Align">
+                <span style="display:inline;" class="glyphicon glyphicon-arrow-left" aria-hidden="true">Back</span>
+            </button>
+        </form>
+        @*<a href="" class="glyphicon glyphicon-arrow-left">Go Back</a>*@
+        <h1 style="font-family:fantasy; display:inline;">Wishlist</h1>
+    </div>
+</div>
 
-<h2>USerProfile</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Image)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WishUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Time)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Image)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WishUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Time)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="MyContainer">
+    @foreach (var item in Model.OrderByDescending(x => x.Time))
+            {
+        <div class="item-div">
+            <div class="item ">
+                <img src="@item.Image" alt="item" />
+                <h2>@item.Title</h2>
+                <a href=@item.WishUrl style="text-decoration: underline;">View item</a>
+            </div>
+        </div>
+    }
+</div>
