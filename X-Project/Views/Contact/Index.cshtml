@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="MyContainer">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+            <h1 style="margin-bottom: 50px; font-family: cursive;">Contact us!</h1>
+        </div>
+    </div>
+
+        <div class="item-div">
+
+            @using (Html.BeginForm("SendEmail", "Contact", FormMethod.Post))
+            {
+                @*<div class="form-group">
+                    <input type="email" class="form-control-contact" id="email" name="email" placeholder="Your Email (Not required)" tabindex="2">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control-contact" id="subject" name="subject" placeholder="Subject" tabindex="3" required>
+                </div>
+                <div class="form-group">
+                    <textarea rows="5" cols="50" name="message" class="form-control" id="message" placeholder="Message..." tabindex="4" required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-start-order">Send Message</button>
+                </div>*@
+                <form>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Your email (Not required)" tabindex="2">
+                    </div>
+                    <div class="form-group">
+                        <label>Titel</label>
+                        <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" tabindex="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Your message</label>
+                        <textarea rows="5" cols="50" name="message" class="form-control" id="message" placeholder="Message..." tabindex="4" required></textarea>
+                    </div>
+                    <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+                </form>
+            }
+        </div>
+</div>
+
