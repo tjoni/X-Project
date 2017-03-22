@@ -3,13 +3,11 @@
 @{
     ViewBag.Title = "USerProfile";
 }
+    <button style="display:inline; float:left" type="button" class="btn btn-primary" aria-label="Left Align" onclick="location.href='@Url.Action("Index", "Friends")'">
+        <span style="display:inline;" class="glyphicon glyphicon-arrow-left" aria-hidden="true">Back</span>
+    </button>
 <div class="MyContainer">
     <div class="item-div">
-        <form action="">
-            <button style="display:inline;" type="button" class="btn btn-default" aria-label="Left Align">
-                <span style="display:inline;" class="glyphicon glyphicon-arrow-left" aria-hidden="true">Back</span>
-            </button>
-        </form>
         @*<a href="" class="glyphicon glyphicon-arrow-left">Go Back</a>*@
         <h1 style="font-family:fantasy; display:inline;">Wishlist</h1>
     </div>
@@ -27,3 +25,7 @@
         </div>
     }
 </div>
+
+
+
+

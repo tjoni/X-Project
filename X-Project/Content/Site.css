@@ -25,6 +25,7 @@ body {
     background: white;
     position:absolute;
     bottom:0;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.14),0px 0px 5px rgba(0, 0, 0, 0.14);
     height:50px;
     width:100%;
 
@@ -105,15 +106,13 @@ textarea {
 
 
 
-
-
 #fixed-form-container{
     position: fixed;
     bottom: 0px;
     left: 3%;
     width: 94%;
     text-align: center;
-    margin: 0;
+    margin-bottom:50px;
 
 }
 
@@ -249,7 +248,7 @@ h2 {
     height: 80px;
     font-family:'Franklin Gothic Medium', 'Arial Narrow';
 }
-button {
+.itembutton{
     border: 1px solid #333;
     padding: 4px 14px;
     background-color: #fff;
@@ -260,6 +259,17 @@ button {
     font-weight: bold;
     cursor: pointer;
 }
+/*button {
+    border: 1px solid #333;
+    padding: 4px 14px;
+    background-color: #fff;
+    color: #333;
+    text-transform: uppercase;
+    float: right;
+    margin: 5px 0;
+    font-weight: bold;
+    cursor: pointer;
+}*/
 
 
 .item-div {
@@ -286,4 +296,56 @@ button {
   position: relative;
   text-align:center;
   margin-bottom: 70px;
+}
+
+.iWishImage {
+    width: 200px;
+    margin-top: 15px;
+}
+
+
+/*textarea {
+	resize: none;
+}
+
+form-control-contact {
+	border-radius: 0;
+	border-color: #ccc;
+   	border-width: 0 0 2px 0;
+   	border-style: none none solid none;
+   	box-shadow: none;
+    background: #f1f1f1;
+}
+.form-control:focus {
+	box-shadow: none;
+	border-color: #5e9bfc;
+}
+.js-hide-label {
+	opacity: 0; 	
+}
+.js-unhighlight-label {
+	color: #999 
+}
+.btn-start-order {
+	background: 0 0 #ffffff;
+    border: 1px solid #2f323a;
+    border-radius: 3px;
+    color: #2f323a;
+    font-family: "Raleway", sans-serif;
+    font-size: 16px;
+    line-height: inherit;
+    margin: 30px 0;
+    padding: 10px 50px;
+    text-transform: uppercase;
+    transition: all 0.25s ease 0s;
+}
+.btn-start-order:hover,.btn-start-order:active, .btn-start-order:focus {
+	border-color: #5e9bfc;
+	color: #5e9bfc;
+}*/
+.adressLabel {
+    display:inherit !important; 
+}
+#urlString{
+    display:inline;
 }

@@ -213,6 +213,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Attribute\FacebookAccessTokenAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\FriendsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -228,6 +229,10 @@
     <Compile Include="Migrations\201703132030005_AddFacebookId.cs" />
     <Compile Include="Migrations\201703132030005_AddFacebookId.Designer.cs">
       <DependentUpon>201703132030005_AddFacebookId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703220035593_updatedb.cs" />
+    <Compile Include="Migrations\201703220035593_updatedb.Designer.cs">
+      <DependentUpon>201703220035593_updatedb.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelData\ViewModel.cs" />
@@ -321,6 +326,8 @@
     <Content Include="Views\Friends\Index.cshtml" />
     <Content Include="Views\Friends\USerProfile.cshtml" />
     <Content Include="Views\Profile\_wishlist.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Contact\SendEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -338,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703132030005_AddFacebookId.resx">
       <DependentUpon>201703132030005_AddFacebookId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703220035593_updatedb.resx">
+      <DependentUpon>201703220035593_updatedb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

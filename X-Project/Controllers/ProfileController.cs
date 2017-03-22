@@ -79,7 +79,7 @@ namespace X_Project.Controllers
             
             var metaInformation = GetMetaDataFromUrl(url);
 
-            if(metaInformation == null)
+            if(metaInformation == null || string.IsNullOrEmpty(metaInformation.Title) || string.IsNullOrEmpty(metaInformation.ImageUrl))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad url");
             }
