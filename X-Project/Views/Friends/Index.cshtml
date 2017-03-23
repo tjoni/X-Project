@@ -27,7 +27,15 @@
                     <img src="@item.ImageUrl" class="friends-img">
                     <div class="profile-text">
                         <h1 class="profile-name">@item.Name</h1>
-                        @Html.ActionLink("WISHLIST", "UserProfile", new { userId = item.UserId, @style= "color: green;" } )
+                        @if (item.WishListCount == 0)
+	                    {
+		                     <strong style="color:#d66565">Has not wishlist yet!</strong>
+                        }
+                        else
+                        {
+                            @Html.ActionLink("WISHLIST", "UserProfile", new { userId = item.UserId, @style = "color: green;" })
+                        }
+
                     </div>
                 </div>
             </div>

@@ -56,6 +56,8 @@ namespace X_Project.Controllers
                     ViewModel _viewModel = new ViewModel();
                     WishListContext context = new WishListContext();
                     string userId = User.Identity.GetUserId();
+                    string baseURL = Request.Url.ToString();
+                    ViewBag.WishlistUrl = baseURL + "Friends/UserProfile?userId=" + userId;
                     _viewModel._FacebookProfileModel = facebookProfile;
                     _viewModel._WishListItem = context.WishListItems.Where(x => x.UserId == userId).ToList();
                     return View(_viewModel);

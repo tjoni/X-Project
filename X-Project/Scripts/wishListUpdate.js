@@ -2,6 +2,8 @@
 $("#submitWish").click(function () {
     var url = $('#urlString').val();
     messages = document.getElementById("error-message");
+    var form = document.getElementById("urlString");
+
     messages.innerHTML = ""
     messages.style.color = "red";
         $.ajax({
@@ -13,6 +15,7 @@ $("#submitWish").click(function () {
                 
                 $("#partialWishlist").html(result);
                 $("#urlString").trigger("reset");
+                $("#urlString").val("")
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 messages.innerHTML = "Bad url adress!";

@@ -230,10 +230,6 @@
     <Compile Include="Migrations\201703132030005_AddFacebookId.Designer.cs">
       <DependentUpon>201703132030005_AddFacebookId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201703220035593_updatedb.cs" />
-    <Compile Include="Migrations\201703220035593_updatedb.Designer.cs">
-      <DependentUpon>201703220035593_updatedb.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelData\ViewModel.cs" />
     <Compile Include="ModelData\WishListContext.cs" />
@@ -267,6 +263,7 @@
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\copyButton.js" />
     <Content Include="Scripts\deleteWishjs.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -345,9 +342,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703132030005_AddFacebookId.resx">
       <DependentUpon>201703132030005_AddFacebookId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703220035593_updatedb.resx">
-      <DependentUpon>201703220035593_updatedb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
